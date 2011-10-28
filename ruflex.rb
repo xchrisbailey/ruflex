@@ -4,8 +4,13 @@ Months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
 Colors = [ 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236 ]
 
 downloaded = Array.new
-IO.foreach("/home/chris/.flexget/flexget.log") do |l|
-  downloaded.push(l) if l =~ /Downloading/
+begin
+  IO.foreach("/home/chris/.flexget/flexget.log") do |l|
+    downloaded.push(l) if l =~ /Downloading/
+  end
+rescue
+  puts "\e[31mNo flexlog present\e[0m"
+  exit 1
 end
 
 show_color = 0
