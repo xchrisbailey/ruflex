@@ -1,4 +1,15 @@
 #!/usr/bin/ruby
+require "getopt/long"
+
+opt = Getopt::Long.getopts(
+  ['--clear', '-c', Getopt::BOOLEAN ]
+)
+
+if opt["clear"]
+  File.delete('/home/chris/.flexget/flexget.log')
+  print "flexget has been removed\n"
+  exit 1
+end
 
 Months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
 Colors = [ 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236 ]
@@ -9,15 +20,17 @@ begin
     downloaded.push(l) if l =~ /Downloading/
   end
 rescue
-  puts "\e[31mNo flexlog present\e[0m"
+  puts "\e[31mNo new shows\e[0m"
   exit 1
 end
+
+puts "\e[31mNo new shows\e[0m" if downloaded.length == 0
+exit if downloaded.length == 0
 
 show_color = 0
 
 Divider = '-' * 82
 print "\e[38;5;236m#{Divider}\e[0m\n"
-
 downloaded.each do |l|
   next if l.include? "ERROR"
   l =~ /(\d+)-(\d+)-(\d+).*Downloading:\s(.*)\s-\sS(\d+)E(\d+).*(SD|HDTV|720p).*/
