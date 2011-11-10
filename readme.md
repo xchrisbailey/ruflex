@@ -6,7 +6,7 @@ requires getopt
 ![screenshot](https://github.com/sonkei/ruflex/blob/master/ss.png?raw=true)
 
 #todo
-* <strike>handle errors</strike>
+* <del>handle errors</del>
 * work on coloring & format
 
 
