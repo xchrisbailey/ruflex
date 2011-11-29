@@ -7,7 +7,7 @@ opt = Getopt::Long.getopts(
 
 if opt["clear"]
   File.delete('/home/chris/.flexget/flexget.log')
-  print "flexget has been removed\n"
+  puts "flexget has been removed"
   exit 1
 end
 
@@ -30,16 +30,16 @@ exit if downloaded.length == 0
 show_color = 0
 
 Divider = '-' * 82
-print "\e[38;5;236m#{Divider}\e[0m\n"
+puts "\e[38;5;236m#{Divider}\e[0m"
 downloaded.each do |l|
   next if l.include? "ERROR"
   l =~ /(\d+)-(\d+)-(\d+).*Downloading:\s(.*)\s-\sS(\d+)E(\d+).*(SD|HDTV|720p).*/
   year, month, day, show, season, episode, quality = $1, Months[$2.to_i-1], $3, $4, $5, $6, $7
 
-  print("\e[38;5;#{Colors[show_color]}m #{show} > S#{season}E#{episode}".rjust(55) + " \e[0m\e[34m| \e[38;5;#{Colors[show_color]}mdownloaded on \e[33m#{day} #{month} #{year}\e[0m\n".rjust(35))
+  puts("\e[38;5;#{Colors[show_color]}m #{show} > S#{season}E#{episode}".rjust(55) + " \e[0m\e[34m| \e[38;5;#{Colors[show_color]}mdownloaded on \e[33m#{day} #{month} #{year}\e[0m".rjust(35))
 
   show_color = show_color + 1 if show_color != Colors.length - 1
   show_color = 0 if show_color == Colors.length - 1
 end
 
-print "\e[38;5;236m#{Divider}\e[0m\n"
+puts "\e[38;5;236m#{Divider}\e[0m"
