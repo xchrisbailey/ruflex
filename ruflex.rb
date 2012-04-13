@@ -1,45 +1,55 @@
 #!/usr/bin/ruby
 require "getopt/long"
+require "action_view"
+include ActionView::Helpers::DateHelper
+require 'date'
+
+Flexlog = "#{ENV['HOME']}/.flexget/flexget.log" # standard location of flexget.log
+COLORS = (236..246).to_a # Grayscale color array
+
+class Object
+  def blank?
+    self.nil? or self == 0 or self == ""
+  end
+end
 
 opt = Getopt::Long.getopts(
   ['--clear', '-c', Getopt::BOOLEAN ]
 )
 
 if opt["clear"]
-  File.delete('/home/chris/.flexget/flexget.log')
-  puts "flexget has been removed"
+  File.delete(flexlog)
+  puts "The flexget log file has been deleted"
   exit 1
 end
 
-Months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
-Colors = [ 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236 ]
+downloads = Array.new
 
-downloaded = Array.new
-begin
-  IO.foreach("/home/chris/.flexget/flexget.log") do |l|
-    downloaded.push(l) if l =~ /Downloading/
+IO.foreach(Flexlog) do |f|
+  next if f =~ /REJECTED/
+  if f =~ /download/
+    f =~ /(\d{4}-\d{2}-\d{2} \d{2}:\d{2}).*Downloading: (\w.*?) - ([sS]\d.[eE]\d.).*/
+    date, series, epse = $1, $2, $3
   end
-rescue
-  puts "\e[31mNo new shows\e[0m"
-  exit 1
+
+  unless date.blank?
+#    new_date = Date.parse date
+    downloads.push("#{date} #{series} #{epse}")
+  end
 end
 
-puts "\e[31mNo new shows\e[0m" if downloaded.length == 0
-exit if downloaded.length == 0
-
+downloads.uniq!
 show_color = 0
+downloads.each do |file|
+  file =~ /(\d{4}-\d{2}-\d{2} \d{2}:\d{2})(.*?)S(\d{2})E(\d{2})/
+  time, series, season, episode = DateTime.strptime($1, '%Y-%m-%d %H:%M'), $2, $3, $4
 
-Divider = '-' * 82
-puts "\e[38;5;236m#{Divider}\e[0m"
-downloaded.each do |l|
-  next if l.include? "ERROR"
-  l =~ /(\d+)-(\d+)-(\d+).*Downloading:\s(.*)\s-\sS(\d+)E(\d+).*(SD|HDTV|720p).*/
-  year, month, day, show, season, episode, quality = $1, Months[$2.to_i-1], $3, $4, $5, $6, $7
+  puts("\e[38;5;#{COLORS[show_color]}m#{series}> S#{season}E#{episode} ".rjust(60) + "\e[0m\e[34m| \e[38;5;#{COLORS[show_color]}mdownloaded #{distance_of_time_in_words_to_now(time)} ago\e[0m".ljust(45))
 
-  puts("\e[38;5;#{Colors[show_color]}m #{show} > S#{season}E#{episode}".rjust(55) + " \e[0m\e[34m| \e[38;5;#{Colors[show_color]}mdownloaded on \e[33m#{day} #{month} #{year}\e[0m".rjust(35))
-
-  show_color = show_color + 1 if show_color != Colors.length - 1
-  show_color = 0 if show_color == Colors.length - 1
+  if show_color == COLORS.length - 1
+    COLORS.reverse!
+    show_color = 0
+  else
+    show_color = show_color + 1
+  end
 end
-
-puts "\e[38;5;236m#{Divider}\e[0m"
