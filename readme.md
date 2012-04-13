@@ -9,6 +9,5 @@ requires getopt
 
 #todo
 * <del>handle errors</del>
-* work on coloring & format
-
-
+* <del>work on coloring & format</del>
+* stop from showing duplicate shows (need to figure this one out)
