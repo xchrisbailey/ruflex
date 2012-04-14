@@ -5,7 +5,7 @@ include ActionView::Helpers::DateHelper
 require 'date'
 
 Flexlog = "#{ENV['HOME']}/.flexget/flexget.log" # standard location of flexget.log
-COLORS = (236..246).to_a # Grayscale color array
+COLORS = (236..247).to_a # Grayscale color array
 
 class Object
   def blank?
@@ -18,7 +18,7 @@ opt = Getopt::Long.getopts(
 )
 
 if opt["clear"]
-  File.delete(flexlog)
+  File.delete(Flexlog)
   puts "The flexget log file has been deleted"
   exit 1
 end
