@@ -38,6 +38,10 @@ IO.foreach(Flexlog) do |f|
 end
 
 downloads.uniq!
+
+puts "\e[31mNo new shows\e[0m" if downloads.empty?
+exit if downloads.empty?
+
 show_color = 0
 downloads.each do |file|
   file =~ /(\d{4}-\d{2}-\d{2} \d{2}:\d{2})(.*?)S(\d{2})E(\d{2})/
