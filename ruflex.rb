@@ -23,14 +23,14 @@ if opt["clear"]
   exit 1
 end
 
-def no_shows
-  puts "\e[31mNo new shows\e[0m"
+def no_shows(problem)
+  puts "\e[31mNo #{problem}\e[0m"
   exit 1
 end
 
 downloads = Array.new
 
-no_shows() unless File.exist?(Flexlog) # No new shows if log not found
+no_shows("flexget log") unless File.exist?(Flexlog) # No new shows if log not found
 
 IO.foreach(Flexlog) do |f|
   next if f =~ /REJECTED/
@@ -46,7 +46,7 @@ end
 
 downloads.uniq! # pretty useless because of timestamps
 
-no_shows if downloads.empty? # no shows if empty array
+no_shows("new shows") if downloads.empty? # no shows if empty array
 
 show_color = 0 # Our starting grey
 downloads.each do |file|
