@@ -17,7 +17,6 @@ end
 #}}}
 
 class Ruflex
-
   # initialize/run magic {{{
   def initialize(flexlog)
     begin
@@ -32,7 +31,7 @@ class Ruflex
 
         date = DateTime.strptime(date, '%Y-%m-%d %H:%M') # make datetime object
 
-        puts("\e[38;5;#{COLORS[show_color]}m#{series} > #{episode} \e[0m\e[34m| ".rjust(66) + "\e[38;5;#{COLORS[show_color]}mdownloaded #{distance_of_time_in_words_to_now(date)} ago\e[0m")
+        puts("\e[38;5;#{COLORS[show_color]}m#{series} > #{episode} \e[0m\e[34m| ".rjust(70) + "\e[38;5;#{COLORS[show_color]}mdownloaded #{distance_of_time_in_words_to_now(date)} ago\e[0m")
         if show_color == COLORS.length - 1
           COLORS.reverse!
           show_color = 0
