@@ -10,4 +10,5 @@ requires getopt
 #todo
 * <del>handle errors</del>
 * <del>work on coloring & format</del>
-* stop from showing duplicate shows (need to figure this one out)
+* stop from showing duplicate shows
+* speed it up.. its super slow.
